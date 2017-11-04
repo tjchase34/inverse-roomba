@@ -3,7 +3,10 @@
 
 int trigPin = 3;
 int echoPin = 2;
+// Current distance reading
 int distance;
+// Distance threshold to initiate turn
+int turn_distance = 20;
 long duration;
 
 int get_distance() {
@@ -29,6 +32,10 @@ void setup() {
 }
 void loop() {
 
-	
+	distance = get_distance();
+	Serial.println(distance);
+	if (distance < turn_distance) {
+		Serial.println("AHHHHHHHHHH");
+	}	
 
 }
