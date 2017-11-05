@@ -1,6 +1,21 @@
 #include <Arduino.h>
 #include "roomba.h"
 
+void step_motor() {
+  digitalWrite(11, LOW);
+  digitalWrite(1, HIGH);
+  delay(7);
+  digitalWrite(0, LOW);
+  digitalWrite(10, HIGH);
+  delay(7);
+  digitalWrite(1, LOW);
+  digitalWrite(11, HIGH);
+  delay(7);
+  digitalWrite(10, LOW);
+  digitalWrite(0, HIGH);
+  delay(7);
+}
+
 /***********************************************
 **                                            **
 **    Ultrasonic Sensor Variables/Functions   **
@@ -58,7 +73,7 @@ int get_distance() {
 // Wheel group 2: Pins 2/3
 // Wheel group 3: Pins 8/9 
 
-int turn_delay = 3000; // Time to initiate turn for (in ms)
+int turn_delay = 3500; // Time to initiate turn for (in ms)
 
 /* Turn 90 degrees to the left. 
  * Reverse wheel group 0 and 2,
@@ -106,7 +121,7 @@ void setup() {
 	// Sensor pins
 	pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
 	pinMode(echoPin, INPUT); // Sets the echoPin as an Input
-	Serial.begin(9600); // Starts the serial communication
+	// Serial.begin(9600); // Starts the serial communication
 
 	// Wheel pins
 	pinMode(2, OUTPUT);
@@ -117,6 +132,10 @@ void setup() {
     pinMode(7, OUTPUT);
     pinMode(8, OUTPUT);
     pinMode(9, OUTPUT);
+    pinMode(10, OUTPUT);
+    pinMode(11, OUTPUT);
+    pinMode(12, OUTPUT);
+    pinMode(13, OUTPUT);
 }
 void loop() {
 
@@ -134,7 +153,7 @@ void loop() {
 
 	int rand = random(0, 2);
 	distance = get_distance();
-	Serial.println(distance);
+	// Serial.println(distance);
 
 	if (last_turn_counter > 0) {
 		--last_turn_counter;
@@ -168,6 +187,6 @@ void loop() {
 		}
 
 		last_turn_counter = last_turn_counter_time;
-		
+
 	}	
 }
