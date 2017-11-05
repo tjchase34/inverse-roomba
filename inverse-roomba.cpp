@@ -2,9 +2,9 @@
 #include "roomba.h"
 
 /***********************************************
-**											  **
+**                                            **
 **    Ultrasonic Sensor Variables/Functions   **
-**											  **
+**                                            **
 ***********************************************/
 // Pins for the ultrasonic sensor
 int trigPin = 12;
@@ -15,6 +15,14 @@ int distance;
 int turn_distance = 40;
 // Time for echo to return
 long duration;
+// Keep track of last turn
+int last_turn;
+// Occasionally set next turn
+int next_turn;
+// Counter for last turn
+int last_turn_counter;
+// Simulated timer count
+int last_turn_counter_time = 2000;
 
 // Get current distance to closest object (in cm)
 int get_distance() {
@@ -33,12 +41,12 @@ int get_distance() {
 
 	return distance;
 }
-/*											        -   (6)  -------------  (5)   -
-											       |0|       |           |       |1|
+/*                                                  -   (6)  -------------  (5)   -
+                                                   |0|       |           |       |1|
 ************************************************    -   (7)  -           -  (4)   -
-**											  **             -           -
-**       Wheel/Motor Variables/Functions      ** 	      	-           -
-**											  **    -   (3)  -           -  (9)   -
+**                                            **             -           -
+**       Wheel/Motor Variables/Functions      **             -           -
+**                                            **    -   (3)  -           -  (9)   -
 ************************************************   |2|       |           |       |3|
                                                     -   (2)  -------------  (8)   -
 */
@@ -127,12 +135,39 @@ void loop() {
 	int rand = random(0, 2);
 	distance = get_distance();
 	Serial.println(distance);
+
+	if (last_turn_counter > 0) {
+		--last_turn_counter;
+	}
+
 	if (distance < turn_distance) {
-		if (rand == 0) {
-			turn_left();
+		
+		if (last_turn_counter != 0) {
+
+			if (last_turn == 0) {
+				turn_right();
+				last_turn = 1;
+			}
+			else {
+				turn_left();
+				last_turn = 0;
+			}
 		}
+
 		else {
-			turn_right();
+
+			if (rand == 0) {
+				turn_left();
+				last_turn = 0;
+			}
+			else {
+				turn_right();
+				last_turn = 1;
+			}
+
 		}
+
+		last_turn_counter = last_turn_counter_time;
+		
 	}	
 }
