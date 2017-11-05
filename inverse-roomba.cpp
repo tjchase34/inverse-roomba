@@ -164,12 +164,12 @@ void loop() {
 		if (last_turn_counter != 0) {
 
 			if (last_turn == 0) {
-				turn_right();
-				last_turn = 1;
-			}
-			else {
 				turn_left();
 				last_turn = 0;
+			}
+			else {
+				turn_right();
+				last_turn = 1;
 			}
 		}
 
